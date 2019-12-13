@@ -17,8 +17,10 @@ class CreateUsuariosTable extends Migration
             $table->unsignedInteger('cedula')->primary();
             $table->text('nombre');
             $table->text('apellido');
+            $table->string('telefono',20);
             $table->boolean('habilitado');
             $table->string('correo')->unique();
+            $table->string('pass',50);
             $table->timestamps();
         });
     }
