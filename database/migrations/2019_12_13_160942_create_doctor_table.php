@@ -16,7 +16,7 @@ class CreateDoctorTable extends Migration
         Schema::create('doctores', function (Blueprint $table) {
             $table->unsignedInteger('cedula')->primary();
             $table->timestamps();
-            $table->foreign('cedula')->references('cedula')->on('usuarios');
+            $table->foreign('cedula')->references('cedula')->on('users');
         });
     }
 
