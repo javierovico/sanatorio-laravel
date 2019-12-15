@@ -19,7 +19,7 @@ class CreateEsperasUsuarios extends Migration
             $table->unsignedBigInteger('espera');
 //            $table->integer('turno')->autoIncrement()->unique();
             $table->primary(['usuario','espera']);
-            $table->foreign('usuario')->references('cedula')->on('usuarios');
+            $table->foreign('usuario')->references('cedula')->on('users');
             $table->foreign('espera')->references('id')->on('esperas');
             $table->timestamps();
         });
