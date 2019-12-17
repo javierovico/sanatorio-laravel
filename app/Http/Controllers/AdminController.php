@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Doctor;
+use App\User;
 use Illuminate\Http\Request;
+use Exception;
 
 class AdminController extends Controller
 {
@@ -13,7 +16,11 @@ class AdminController extends Controller
      */
     public function index()
     {
-        //
+        $usuarios = User::all();
+        foreach ($usuarios as $usuario){
+            $usuario->doctor;
+        }
+        return $usuarios;
     }
 
     /**
@@ -77,8 +84,52 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy($id){
+        try{
+            $cantidadBorrada = User::destroy($id);
+            return ['deleted'=>$cantidadBorrada];
+        }catch (Exception $e){
+            return ['error'=>'no se pudo borrar'];
+        }
+    }
+
+    public function crearDoctor(Request $request){
+        $this->validate($request, [
+            'cedula' => 'required|numeric'
+        ]);
+        try{
+            $usuario = User::where('cedula','=',$request->cedula)->get()->first();
+            if($usuario==null){
+                return response()->json(['error' => 'no existe el usuario con esa cedula'],403);
+            }
+            $nuevoDoc = Doctor::where('cedula','=',$request->cedula)->get()->first();
+            if($nuevoDoc == null){
+                $nuevoDoc =    new Doctor([
+                    'cedula' => $request->cedula
+                ]);
+                $nuevoDoc->save();
+                return ['message'=>'se creo correctamente'];
+            }else{
+                return response()->json( ['error'=>'Ese doctor ya existia'],403);
+            }
+        }catch (Exception $e){
+            return response()->json(['error'=>'No se pudo crear '.$e],403);
+        }
+    }
+
+    public function sacarDoctor(Request $request){
+        $this->validate($request, [
+            'cedula' => 'required|numeric'
+        ]);
+        try{
+            $destruido = Doctor::destroy($request->cedula);
+            if($destruido>0){
+                return ['message'=>'se borro correctamente'];
+            }else{
+                return response()->json(['error'=>'Ese doctor jamas existio'],403);
+            }
+        }catch (Exception $e){
+            return response()->json(['error'=>'No se pudo crear '.$e],403);
+        }
     }
 }

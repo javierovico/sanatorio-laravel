@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,4 +26,31 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('logout', 'AuthController@logout');
         Route::get('user', 'AuthController@user');
     });
+});
+
+
+Route::group(['prefix' => 'admin'], function () {
+    Route::group(['middleware' => 'auth:api'], function() {
+        Route::group(['middleware' => 'rol.admin'], function() {
+            Route::resource('usuarios', 'AdminController');
+            Route::post('crear-doctor', 'AdminController@crearDoctor');
+            Route::post('sacar-doctor', 'AdminController@sacarDoctor');
+        });
+    });
+});
+
+//TODO
+Route::group(['prefix' => 'doctor'], function () {
+    Route::group(['middleware' => 'auth:api'], function() {
+        Route::group(['middleware' => 'rol.admin:doctor'], function() {
+            Route::get('especialidad/{cedula}', 'DoctorController@optenerEspecialidades');
+        });
+    });
+});
+
+
+Route::middleware('auth:api')->get('/prueba3', function (Request $request) {
+    $usuario = $request->user();
+    $usuario->doctor;
+    return $usuario;
 });

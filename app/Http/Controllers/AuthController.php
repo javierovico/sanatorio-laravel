@@ -46,11 +46,15 @@ class AuthController extends Controller
         $token = $tokenResult->token;
         if ($request->remember_me) {
             $token->expires_at = Carbon::now()->addWeeks(1);
+        }else{
+            $token->expires_at = Carbon::now()->addDay(1);
         }
         $token->save();
         return response()->json([
             'access_token' => $tokenResult->accessToken,
             'token_type'   => 'Bearer',
+            'es_doctor'    => ($user->doctor)!=null,
+            'es_admin'     => ($user->admin)!=null,
             'expires_at'   => Carbon::parse(
                 $tokenResult->token->expires_at)
                 ->toDateTimeString(),
@@ -66,6 +70,10 @@ class AuthController extends Controller
 
     public function user(Request $request)
     {
-        return response()->json($request->user());
+        $usuario = $request->user();
+        $usuario->doctor;   //actualiza
+        $usuario->admin;
+        return response()->json($usuario);
+//        return response()->json(['user'=>$request->user(), 'request'=>$request]);
     }
 }
