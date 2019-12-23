@@ -11,4 +11,9 @@ class Doctor extends Model
     public $incrementing = false;
 
     protected $fillable = ['cedula'];
+
+    public function especialidadesId(){
+        return $this->belongsToMany('App\Doctor',)
+        return $this->hasMany('App\DoctorEspecialidad','doctor','cedula');
+    }
 }

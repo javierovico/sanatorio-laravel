@@ -55,6 +55,8 @@ class AuthController extends Controller
             'token_type'   => 'Bearer',
             'es_doctor'    => ($user->doctor)!=null,
             'es_admin'     => ($user->admin)!=null,
+            'cedula'        => $user->cedula,
+            'id'            => $user->id,
             'expires_at'   => Carbon::parse(
                 $tokenResult->token->expires_at)
                 ->toDateTimeString(),

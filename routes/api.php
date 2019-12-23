@@ -43,7 +43,7 @@ Route::group(['prefix' => 'admin'], function () {
 Route::group(['prefix' => 'doctor'], function () {
     Route::group(['middleware' => 'auth:api'], function() {
         Route::group(['middleware' => 'rol.admin:doctor'], function() {
-            Route::get('especialidad/{cedula}', 'DoctorController@optenerEspecialidades');
+            Route::get('especialidad', 'DoctorController@optenerEspecialidades');
         });
     });
 });
